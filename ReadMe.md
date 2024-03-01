@@ -29,7 +29,8 @@ This project uses ocamllex and ocamlyacc to convert the input function to a pars
 
 ## Features
 
-1. Elementary exponential, logarithmic, trignometric functions and their compositions along with basic arithmetic operations.
+1. Elementary exponential, logarithmic, trignometric functions and their compositions along with basic arithmetic operations. Also currently 
+    we only use integers
 
 2. The function is assumed to be of the variable `x` and other variables are taken as symbols. The symbols can start with lowercase letters and thereafter can contain alphanumerics and underscores
 
@@ -58,3 +59,9 @@ log(1+sin(x^2))
 1+2*x+3^x 
 (2 + ((3 ^ x) * log(3)))
 ```
+
+## Help Needed !
+The following improvements can be made : 
+    1. Add inverse and hyperbolic trig functions
+    2. Add real numbers 
+    3. Add mathematical constants
