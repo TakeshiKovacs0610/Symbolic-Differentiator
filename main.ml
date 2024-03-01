@@ -1,34 +1,10 @@
-(* read input and print parse tree using Lexer and Parser*)
 open Parser
 open Lexer
 
 exception TooComplex
 
-(* 
-    type exp = 
-        | Add of exp * exp
-        | Sub of exp * exp
-        | Mul of exp * exp
-        | Div of exp * exp
-        | Pow of exp * exp 
-        | Sin of exp
-        | Cos of exp
-        | Tan of exp
-        | Sec of exp
-        | Csc of exp
-        | Cot of exp
-        | Exp of exp
-        | Minus of exp
-        | Num of int
-        | Log of exp
-        | Const of string
-        | X
 
-*)
 
-let input_tree = let line = input_line stdin in
-  let lexbuf = Lexing.from_string line in
-  Parser.e Lexer.token lexbuf
 
 let rec eval tree = match tree with
   | Num n -> Num 0 
@@ -132,10 +108,16 @@ let rec simplify tree = match tree with
   | Cot t -> Cot (simplify t)
   | Exp t -> Exp (simplify t)
   | Minus t -> let t' = match t with
-    | Minus t1 -> t1
-    | Num n -> Num (-n)
-    | _ -> Minus (simplify t)
+      | Minus t1 -> t1
+      | Num n -> Num (-n)
+      | _ -> Minus (simplify t)
     in t'
+
+
+
+let input_tree = let line = input_line stdin in
+  let lexbuf = Lexing.from_string line in
+  Parser.e Lexer.token lexbuf
 
 
 let output_tree = simplify (eval input_tree)
@@ -159,6 +141,8 @@ let rec tree_to_expr = function
   | Exp exp -> "e^(" ^ tree_to_expr exp ^ ")"
   | Const s -> s
 
-let () = Printf.printf "%s\n" (tree_to_expr output_tree)
+let () = 
+  print_endline "Enter your function:";
+  Printf.printf "%s\n" (tree_to_expr output_tree)
 
 
