@@ -4,7 +4,7 @@ open Lexer
 exception TooComplex
 
 
-
+(* Function to output the parse tree of the derivative *)
 
 let rec eval tree = match tree with
   | Num n -> Num 0 
@@ -64,31 +64,32 @@ let rec eval tree = match tree with
     Mul(Exp t, e)
 
 
+(* Function to recursively simplify the answer wherever possible *)
 
 let rec simplify tree = match tree with
   | Num n -> Num n
   | X -> X
   | Const s -> Const s
   | Add (e1 , e2) -> let t1 = simplify e1 and t2 = simplify e2 in
-    if t1 = Num 0 then t2 else if t2 = Num 0 then t1 else (*Add(t1, t2)*)
+    if t1 = Num 0 then t2 else if t2 = Num 0 then t1 else 
       let t3 = match (t1,t2) with
         | Num n1, Num n2 -> Num (n1 + n2)
         | _ -> Add(t1, t2)
       in t3
   | Sub (e1 , e2) -> let t1 = simplify e1 and t2 = simplify e2 in
-    if t1 = Num 0 then Minus t2 else if t2 = Num 0 then t1 else (*Sub(t1, t2)*)
+    if t1 = Num 0 then Minus t2 else if t2 = Num 0 then t1 else 
       let t3 = match (t1,t2) with
         | Num n1, Num n2 -> Num (n1 - n2)
         | _ -> Sub(t1, t2)
       in t3
   | Mul (e1 , e2) -> let t1 = simplify e1 and t2 = simplify e2 in
-    if t1 = Num 0 || t2 = Num 0 then Num 0 else if t1 = Num 1 then t2 else if t2 = Num 1 then t1 else (*Mul(t1, t2)*)
+    if t1 = Num 0 || t2 = Num 0 then Num 0 else if t1 = Num 1 then t2 else if t2 = Num 1 then t1 else 
       let t3 = match (t1,t2) with
         | Num n1, Num n2 -> Num (n1 * n2)
         | _ -> Mul(t1, t2)
       in t3
   | Div (e1 , e2) -> let t1 = simplify e1 and t2 = simplify e2 in
-    if t1 = Num 0 then Num 0 else if t2 = Num 1 then t1 else (*Div(t1, t2)*)
+    if t1 = Num 0 then Num 0 else if t2 = Num 1 then t1 else 
       let t3 = match (t1,t2) with
         | Sin t, Cos t1 -> if (t1 = t) then Tan t else Div(t1, t2)
         | Cos t, Sin t1 -> if (t1 = t) then Cot t else Div(t1, t2)
@@ -113,14 +114,7 @@ let rec simplify tree = match tree with
       | _ -> Minus (simplify t)
     in t'
 
-
-
-let input_tree = let line = input_line stdin in
-  let lexbuf = Lexing.from_string line in
-  Parser.e Lexer.token lexbuf
-
-
-let output_tree = simplify (eval input_tree)
+(* Function to convert a parse tree to string *)
 
 let rec tree_to_expr = function
   | Num n -> string_of_int n
@@ -141,8 +135,20 @@ let rec tree_to_expr = function
   | Exp exp -> "e^(" ^ tree_to_expr exp ^ ")"
   | Const s -> s
 
+
+
+
+(* *)
 let () = 
   print_endline "Enter your function:";
+  (* Generate the input tree using Lexer and Parser*)
+  let input_tree = let line = input_line stdin in
+    let lexbuf = Lexing.from_string line in
+    Parser.e Lexer.token lexbuf in 
+  (* Evaluate and simplify the answer*)
+  let output_tree = simplify (eval input_tree) in
+  (* Print the answer *)
+  print_endline "The derivative of the function is:";
   Printf.printf "%s\n" (tree_to_expr output_tree)
 
 

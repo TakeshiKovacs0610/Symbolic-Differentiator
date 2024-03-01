@@ -1,3 +1,4 @@
+// The tree structure of the expression is defined in the following way:
 %{
     type exp = 
         | Add of exp * exp
@@ -19,6 +20,8 @@
         | Const of string
 %}
 
+// Various tokens in the surface language
+
 %token  X
 %token <int> INT
 %token <string> CONST
@@ -28,13 +31,17 @@
 %token RPAREN LPAREN
 %token EOF
 
+// The start symbol of the grammar
+
 %start e
+
+//Non terminals : 
 
 %type <exp> e a m p n
 
 
 %%
-
+// The grammar rules (unambiguous grammar)
 e : 
     a { $1 }
     | a ADD e { Add($1, $3) }
@@ -66,4 +73,4 @@ p :
 n : 
     | INT { Num($1) }
     | CONST { Const($1) }
-    // | LOG INT { Log($2) }
+

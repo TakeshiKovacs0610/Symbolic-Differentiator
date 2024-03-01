@@ -2,7 +2,7 @@
     open Parser
 }
 
-(* write lexer for whitespaces integers plus and times *)
+
 
 let white = [' ' '\t' '\n' '\r']+ 
 let digit = ['0'-'9'] 
